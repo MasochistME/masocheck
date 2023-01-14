@@ -3,9 +3,10 @@ import { Arcybot, log } from "arcybot";
 import { GatewayIntentBits, Partials } from "discord.js";
 import { SDK } from "@masochistme/sdk/dist/v1/sdk";
 
-import { getOption ,Database} from "utils";
+import { Cache } from "api/cache";
+import { getOption, Database } from "utils";
 import { commandsFunctions, customCommands } from "commands";
-import { handleModals, handleAutocomplete, handleButtons } from "interactions";
+import { handleButtons } from "interactions";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ dotenv.config();
  *        CONFIG        *
  ************************/
 
+const botDb = "masocheck";
 export const mmeDb =
   process.env["ENV"] === "dev" ? "masochist-dev" : "masochist";
 
@@ -25,8 +27,8 @@ export const sdk = new SDK({
   host,
   authToken: process.env.ACCESS_TOKEN,
 });
-
 export const mongo = new Database([{ symbol: botDb, url: process.env["DB"] }]);
+export const cache = new Cache({ botDb });
 
 /************************
  *      BOT CONFIG      *
@@ -35,6 +37,8 @@ export const mongo = new Database([{ symbol: botDb, url: process.env["DB"] }]);
 export let bot: Arcybot;
 
 const init = async () => {
+  await mongo.init();
+  await cache.update();
   const config = {
     discordToken: process.env.DISCORD_TOKEN,
     botId: process.env.BOT_ID,
@@ -52,17 +56,14 @@ const init = async () => {
     customCommands,
   );
 
-  bot.start("Dr. Fetus reporting for destruction!");
+  bot.start("MasoCHECK started!");
 
   bot.botClient
     .on("ready", async () => {
-      // Race timer checks every minute if any race should get updated.
-      handleRaceTimer();
+      log.INFO("MasoCHECK is ready!");
     })
     .on("interactionCreate", async interaction => {
-      if (interaction.isAutocomplete()) handleAutocomplete(interaction);
       if (interaction.isButton()) handleButtons(interaction);
-      if (interaction.isModalSubmit()) handleModals(interaction);
     })
     .on("error", async error => {
       log.DEBUG("Discord bot error detected");
@@ -71,8 +72,8 @@ const init = async () => {
     .on("warn", async (message: string) => {
       log.DEBUG("Discord bot warning detected");
       console.log(message);
-    })
-    .on("debug", console.log);
+    });
+  // .on("debug", console.log);
 };
 
 init();

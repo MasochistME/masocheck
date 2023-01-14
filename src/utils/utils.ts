@@ -1,8 +1,4 @@
-import { DiscordInteraction } from "arcybot";
-
-import { cache, sdk } from "masocheck";
-import { Room, UNKNOWN_NAME } from "consts";
+import { cache } from "masocheck";
 
 export const getOption = <T>(key: string): T =>
   cache.options.find(option => option.option === key)?.value;
-  
