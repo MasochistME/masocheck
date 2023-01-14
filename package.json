@@ -1,0 +1,39 @@
+{
+  "name": "masocheck",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "https://github.com/MasochistME/masocheck.git",
+  "author": "Arcyvilk <blazemakerrr@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "create-command": "node ./scripts/createCommand.mjs && yarn lint --fix",
+    "build:dev": "env ENV=dev tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+    "build:prod": "env ENV=prod tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+    "masocheck:dev": "env ENV=dev npx tsx src/masocheck.ts",
+    "masocheck:dev:watch": "env ENV=dev nodemon --exec npx tsx src/masocheck.ts",
+    "masocheck:prod": "env ENV=prod npx tsx src/masocheck.ts",
+    "masocheck:prod:watch": "env ENV=prod nodemon --exec npx tsx src/masocheck.ts",
+    "masocheck": "node dist/masocheck.js",
+    "start": "env ENV=prod node dist/masocheck.js",
+    "lint": "eslint . --ext .ts --fix",
+    "test": "echo TODO"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.48.1",
+    "@typescript-eslint/parser": "^5.48.1",
+    "eslint": "^8.31.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.3",
+    "tsc-alias": "^1.8.2",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "@masochistme/sdk": "^2.2.14",
+    "@types/mongodb": "^4.0.7",
+    "arcybot": "^1.4.7",
+    "discord.js": "^14.7.1",
+    "mongodb": "^4.13.0"
+  }
+}
